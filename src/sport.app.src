@@ -8,7 +8,9 @@
     stdlib
    ]},
   {env,[]},
-  {modules, []},
+  {modules, [
+    common_function
+  ]},
 
   {maintainers, []},
   {licenses, ["Apache 2.0"]},
