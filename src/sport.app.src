@@ -9,7 +9,9 @@
    ]},
   {env,[]},
   {modules, [
-
+   file_server,
+   file_server_client,
+   common_function
   ]},
 
   {maintainers, []},
