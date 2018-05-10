@@ -2,19 +2,33 @@
 -author("merk").
 
 %% API
--export([split/1]).
+-export([split_binary/2]).
 
--define(NUMBER_OF_CHUNKS, application:get_env(sport, number_of_chunks)).
+%%====================================================================
+%% API
+%%====================================================================
 
 %% ---------------------------------------
 %% Split data into chunks
 %% ---------------------------------------
 
-split(Data) ->
-  io:format("------- ~p", [application:get_all_env(sport)]),
-  NumberOfElements = ?NUMBER_OF_CHUNKS,
-  split(Data, NumberOfElements).
+
+-spec split_binary(binary(), integer()) -> list().
+split_binary(Data, Length) ->
+  split( binary_to_list(Data), Length).
 
 
-split(Data, NumberOfElements) ->
-  [Data, NumberOfElements].
+-spec split(list(), integer()) -> list().
+split([], _) -> [];
+
+split(List, Length) when Length > length(List) ->
+  [List];
+
+split(List, Length) ->
+  {Head, Tail} = lists:split(Length, List),
+  [Head | split(Tail, Length)].
+
+
+%%====================================================================
+%% Internal functions
+%%====================================================================
