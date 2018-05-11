@@ -2,7 +2,9 @@
 -author("merk").
 
 %% API
--export([split_binary/2]).
+-export([split/1]).
+
+
 
 %%====================================================================
 %% API
@@ -12,21 +14,21 @@
 %% Split data into chunks
 %% ---------------------------------------
 
-
--spec split_binary(binary(), integer()) -> list().
-split_binary(Data, Length) ->
-  split( binary_to_list(Data), Length).
-
+-spec split(binary()) -> list().
+split(Data) ->
+  NumberOfElements = 4,
+  List = binary_to_list(Data),
+  split( List, ceil(length(List) / NumberOfElements)).
 
 -spec split(list(), integer()) -> list().
-split([], _) -> [];
+split([],_) -> [];
 
-split(List, Length) when Length > length(List) ->
+split(List,Len) when Len > length(List) ->
   [List];
 
-split(List, Length) ->
-  {Head, Tail} = lists:split(Length, List),
-  [Head | split(Tail, Length)].
+split(List,Len) ->
+  {Head,Tail} = lists:split(Len,List),
+  [Head | split(Tail,Len)].
 
 
 %%====================================================================

@@ -43,7 +43,6 @@ stop() ->
 -spec(start_link() ->
   {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_link() ->
-%%  gen_server:start_link(?MODULE, [], []).
   gen_server:start_link({global, ?SERVER}, ?MODULE, [], []).
 
 %%%===================================================================
@@ -82,7 +81,6 @@ init([]) ->
   {noreply, NewState :: #state{}, timeout() | hibernate} |
   {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
   {stop, Reason :: term(), NewState :: #state{}}).
-
 
 handle_call({write_file, ChunkKey, Data}, _From, State) ->
   {ok, FileHandler} = file:open(get_file_path(ChunkKey), write),

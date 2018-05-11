@@ -21,4 +21,3 @@ read_file(ChunkKey) ->
 -spec delete_file(binary()) -> ok | {error, _Reason}.
 delete_file(ChunkKey) ->
   server_s3:delete_chunk(ChunkKey).
-
