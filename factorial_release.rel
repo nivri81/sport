@@ -1,0 +1,11 @@
+{release,
+  {"factorial_release", "1.0" },
+  {erts, "5.10.1"},
+  [
+    {kernel, "5.4.3"},
+    {stdlib, "3.4.4"},
+    {sasl, "3.1.1"},
+    {mnesia, "4.15.3"},
+    {factorial_app, "0.2.0"}
+  ]
+}.

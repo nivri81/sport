@@ -1,4 +1,4 @@
-sport
+factorial
 =====
 
 An OTP application

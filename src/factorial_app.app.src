@@ -1,0 +1,15 @@
+{application, factorial_app,
+ [{description, "An OTP application"},
+  {vsn, "0.2.0"},
+  {registered, [database_server, factorial_server, factorial_supervisor]},
+  {mod, { factorial_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, [factorial_client, factorial_logic, factorial_server, factorial_supervisor, factorial_app, database_logic, database_server]},
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
