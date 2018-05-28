@@ -2,9 +2,7 @@
 -author("merk").
 
 %% API
--export([split/1]).
-
-
+-export([split/1, split/2]).
 
 %%====================================================================
 %% API
@@ -16,19 +14,19 @@
 
 -spec split(binary()) -> list().
 split(Data) ->
-  NumberOfElements = 4,
+  ChunkSize = 4,
   List = binary_to_list(Data),
-  split( List, ceil(length(List) / NumberOfElements)).
+  split( List, ceil(length(List) / ChunkSize)).
 
 -spec split(list(), integer()) -> list().
-split([],_) -> [];
+split([], _) -> [];
 
-split(List,Len) when Len > length(List) ->
+split(List, Len) when Len > length(List) ->
   [List];
 
-split(List,Len) ->
-  {Head,Tail} = lists:split(Len,List),
-  [Head | split(Tail,Len)].
+split(List, Len) ->
+  {Head,Tail} = lists:split(Len, List),
+  [Head | split(Tail, Len)].
 
 
 %%====================================================================
