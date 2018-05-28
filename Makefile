@@ -9,7 +9,7 @@ compile :
 
 dev : compile
 #	$(ERL) -config sys.config -pa _build/default/lib/sport/ebin -s sport_app start
-	$(ERL) -config sys.config -pa _build/default/lib/factorial_app/ebin
+	$(ERL) -config sys.config -pa _build/default/lib/storage_system/ebin
 
 #-s factorial_app start
 
