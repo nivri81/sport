@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc factorial public API
+%% @doc Storage application
 %% @end
 %%%-------------------------------------------------------------------
 
--module(factorial_app).
+-module(storage_system).
 
 -behaviour(application).
 
@@ -18,7 +18,7 @@ start() ->
     application:start(?MODULE).
 
 start(_StartType, _StartArgs) ->
-    factorial_supervisor:start_link().
+    storage_supervisor:start_link().
 
 %%--------------------------------------------------------------------
 

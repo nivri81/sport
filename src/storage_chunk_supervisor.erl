@@ -1,13 +1,13 @@
 %%%-------------------------------------------------------------------
-%%% @author merk
+%%% @author grzegorz
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
 %%% @end
 %%% Created : 28. May 2018 17:17
 %%%-------------------------------------------------------------------
--module(factorial_supervisor).
--author("merk").
+-module(storage_chunk_supervisor).
+-author("grzegorz").
 
 -behavior(supervisor).
 
@@ -47,33 +47,8 @@ init([]) ->
   %%  supervisor
   Type = worker,
 
-  ChildSpecifications = {factorialServerId, {factorial_server, start_link, []}, Restart, Shutdown, Type, [factorial_server]},
-
-
-  MnesiaSpecifications = {mnesiaServerId, {database_server, start_link, []}, Restart, Shutdown, Type, [database_server]},
+  StorageSpecifications = {storageChunkServerId, {storage_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
 
   %%  tuple of restart strategy, max restarts and max time
   %%  child specification
-  {ok, {Flags, [ChildSpecifications, MnesiaSpecifications]}}.
-
-%%
-%%-define(SERVER, ?MODULE).
-%%
-%%%%====================================================================
-%%%% API functions
-%%%%====================================================================
-%%
-%%start_link() ->
-%%  supervisor:start_link({local, ?SERVER}, ?MODULE, []).
-%%
-%%%%====================================================================
-%%%% Supervisor callbacks
-%%%%====================================================================
-%%
-%%%% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
-%%init([]) ->
-%%  {ok, { {one_for_all, 0, 1}, []} }.
-%%
-%%%%====================================================================
-%%%% Internal functions
-%%%%====================================================================
+  {ok, {Flags, [StorageSpecifications]}}.
