@@ -19,7 +19,7 @@
 %%====================================================================
 
 write(FileName, Data) ->
-  io:format("Filename ~p, Data ~p, Chunk data ~p", [FileName, Data, ?CHUNK_SIZE]),
+  io:format("Filename ~p, Data ~p, Chunk data size ~p", [FileName, Data, ?CHUNK_SIZE]),
 
   %% split to chunks - read chunk size from configuration
   %% read nodes from configuration
