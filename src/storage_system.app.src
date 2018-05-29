@@ -1,4 +1,4 @@
-{application, factorial_app,
+{application, storage_system,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
   {registered, [storage_chunk_server, storage_chunk_supervisor]},

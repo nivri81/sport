@@ -1,6 +1,6 @@
 %%%-------------------------------------------------------------------
 %%% @author grzegorz
-%%% @copyright (C) 2018, <COMPANY>
+%%% @copyright (C) 2018, The Company Ltd
 %%% @doc
 %%%
 %%% @end

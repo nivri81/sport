@@ -1,12 +1,12 @@
 %%%-------------------------------------------------------------------
 %%% @author grzegorz
-%%% @copyright (C) 2018, <COMPANY>
+%%% @copyright (C) 2018, The Company Ltd
 %%% @doc
 %%%
 %%% @end
 %%% Created : 28. May 2018 17:17
 %%%-------------------------------------------------------------------
--module(storage_chunk_supervisor).
+-module(storage_supervisor).
 -author("grzegorz").
 
 -behavior(supervisor).

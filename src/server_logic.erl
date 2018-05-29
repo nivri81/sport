@@ -19,6 +19,8 @@
 %%====================================================================
 
 write(FileName, Data) ->
+  io:format("Filename ~p, Data ~p, Chunk data ~p", [FileName, Data, ?CHUNK_SIZE]),
+
   %% split to chunks - read chunk size from configuration
   %% read nodes from configuration
   %% send chunks to nodes (in parallel II iteration )
@@ -26,12 +28,17 @@ write(FileName, Data) ->
   ok.
 
 read(FileName) ->
+
+  io:format("Filename ~p", [FileName]),
+  io:format("~n -------------------------- ~n"),
   %% read chunks information from mnesia
   %% retrieve data from nodes (in parallel II iteration)
   %% sort chunks in right order
   ok.
 
 delete(FileName) ->
+  io:format("Filename ~p", [FileName]),
+  io:format("~n -------------------------- ~n"),
   %% read chunks information from mnesia
   %% send request to remove all chunks (in parallel II iteration)
   %% remove record from mnesia
