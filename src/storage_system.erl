@@ -46,20 +46,11 @@ stop(_State) ->
 
 setup_cowboy() ->
 
-    io:format("~n -------- setup cowboy ---------- ~n"),
-
     Dispatch = cowboy_router:compile([
         {'_', [{"/", hello_handler, []}]}
     ]),
-
-    io:format("~n -------- routing set ---------- ~n"),
-
-    R = cowboy:start_clear(
-        http,
-        [{port, 6666}],
-        #{env => #{dispatch => Dispatch}}),
-
-
-    io:format("~n -------- Cowboy started ---------- ~n ~p zzzzzzzzz", [R]),
-
+    {ok, _} = cowboy:start_clear(my_http_listener,
+        [{port, 8080}],
+        #{env => #{dispatch => Dispatch}}
+    ),
     ok.

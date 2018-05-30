@@ -14,9 +14,9 @@
 
 
 init(Req0, State) ->
-  io:format("~n ------------------------------- ~n"),
+  io:format("~n ----------- sfsdf -------------------- ~n"),
   Req = cowboy_req:reply(200,
     #{<<"content-type">> => <<"text/plain">>},
-    <<"Hello Erlang!">>,
+    <<"Hello Erlang aasdada -- rrrrrrrrrr  sada------- !">>,
     Req0),
   {ok, Req, State}.
