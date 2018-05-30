@@ -12,15 +12,27 @@
 %% API
 -export([write/2, read/1, delete/1]).
 
-write(Key, Data) ->
-  Result  = storage_chunk_server:write(Key, Data),
-  case Result of
-    {atomic, ok} -> io:format("Data saved for ~p ~n", [Key]);
-      _ -> io:format("Data has not been saved for ~p, received ~p ~n", [Key, Result])
-  end.
+%%====================================================================
+%% API
+%%====================================================================
 
+%% -------------------------------------------------------------------
+%% @doc write chunk
+%% -------------------------------------------------------------------
+-spec write(binary(), binary()) -> binary().
+write(Key, Data) ->
+  {atomic, ok}   = storage_chunk_server:write(Key, Data),
+  ok.
+%% -------------------------------------------------------------------
+%% @doc read chunk
+%% -------------------------------------------------------------------
+-spec read(binary()) -> binary().
 read(Key) ->
   storage_chunk_server:read(Key).
 
+%% -------------------------------------------------------------------
+%% @doc delete chunk
+%% -------------------------------------------------------------------
+-spec delete(binary()) -> ok.
 delete(Key) ->
   storage_chunk_server:delete(Key).
