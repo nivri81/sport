@@ -22,6 +22,5 @@ write(Key, Data) ->
 read(Key) ->
   storage_chunk_server:read(Key).
 
-
 delete(Key) ->
   storage_chunk_server:delete(Key).

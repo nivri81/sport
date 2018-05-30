@@ -40,8 +40,8 @@ write(Key, Data) ->
 read(Key) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_chunk.key =:= Key]),
-    Results = qlc:e(Query),
-    lists:map(fun(Item) -> Item#file_chunk.data end, Results)
+    [Result] = qlc:e(Query),
+    Result#file_chunk.data
   end,
   {atomic, Comments} = mnesia:transaction(AF),
   Comments.
