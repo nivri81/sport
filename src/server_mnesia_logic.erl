@@ -80,12 +80,12 @@ store_file_metadata(FileName, ListOfChunksWithNodes) ->
 -spec delete_metadata(binary()) -> ok.
 delete_metadata(FileName) ->
   AF = fun() ->
-    Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_metadata.file_name =:= FileName]),
+    Query = qlc:q([X || X <- mnesia:table(file_metadata), X#file_metadata.file_name =:= FileName]),
     Results = qlc:e(Query),
     F = fun() ->
         lists:foreach(fun(Result) -> mnesia:delete_object(Result) end, Results)
         end,
       mnesia:transaction(F)
      end,
-  {atomic, ok} = mnesia:transaction(AF),
+  {atomic, {atomic, ok}} = mnesia:transaction(AF),
   ok.

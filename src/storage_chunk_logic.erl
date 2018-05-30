@@ -55,4 +55,5 @@ delete(Key) ->
       end,
     mnesia:transaction(F)
    end,
-  mnesia:transaction(AF).
+  {atomic,{atomic,ok}} = mnesia:transaction(AF),
+  ok.

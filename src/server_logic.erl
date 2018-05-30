@@ -44,7 +44,7 @@ delete(FileName) ->
 
   KeyNodeList = server_mnesia_logic:read_key_node_list(FileName),
   [ok = delete_chunk_on_node(Key, Node) || {Key, Node} <- KeyNodeList],
-  ok = server_mnesia_logic:delete_metadata(FileName)
+  ok = server_mnesia_logic:delete_metadata(FileName),
   ok.
 
 %%====================================================================
