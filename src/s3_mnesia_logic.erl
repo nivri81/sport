@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. May 2018 00:29
 %%%-------------------------------------------------------------------
--module(server_mnesia_logic).
+-module(s3_mnesia_logic).
 -author("grzegorz").
 
 -include_lib("stdlib/include/qlc.hrl").

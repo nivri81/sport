@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 28. May 2018 19:48
 %%%-------------------------------------------------------------------
--module(storage_chunk_logic).
+-module(s3_chunk_logic).
 -author("grzegorz").
 
 -include_lib("stdlib/include/qlc.hrl").

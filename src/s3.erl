@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 29. May 2018 21:43
 %%%-------------------------------------------------------------------
--module(server_logic).
+-module(s3).
 -author("grzegorz").
 
 %% API

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 28. May 2018 16:13
 %%%-------------------------------------------------------------------
--module(storage_chunk_client).
+-module(s3_chunk).
 -author("merk").
 
 %% API
