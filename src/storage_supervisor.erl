@@ -26,7 +26,7 @@ start_link() ->
 
 init([]) ->
 
-  server_mnesia_logic:init(),
+  s3_mnesia_logic:init(),
 
   io:format("~p (~p) starting ... ~n", [{global, ?MODULE}, self()]),
 
@@ -50,7 +50,7 @@ init([]) ->
   %%  supervisor
   Type = worker,
 
-  StorageSpecifications = {storageChunkServerId, {storage_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
+  StorageSpecifications = {storageChunkServerId, {s3_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
 
   %%  tuple of restart strategy, max restarts and max time
   %%  child specification

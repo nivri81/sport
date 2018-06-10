@@ -52,19 +52,19 @@ delete(Key) ->
 init([]) ->
   process_flag(trap_exit, true),
   io:format("~p (~p) starting .... ~n", [{global, ?MODULE}, self()]),
-  storage_chunk_logic:init(),
+  s3_chunk_logic:init(),
   {ok, #state{}}.
 
 handle_call({write, Key, Data}, _From, State) ->
-  Result = storage_chunk_logic:write(Key, Data),
+  Result = s3_chunk_logic:write(Key, Data),
   {reply, Result, State};
 
 handle_call({read, Key}, _From, State) ->
-  Data = storage_chunk_logic:read(Key),
+  Data = s3_chunk_logic:read(Key),
   {reply, Data, State};
 
 handle_call({delete, Key}, _From, State) ->
-  Result = storage_chunk_logic:delete(Key),
+  Result = s3_chunk_logic:delete(Key),
   {reply, Result, State};
 
 handle_call(_Request, _From, State) ->
