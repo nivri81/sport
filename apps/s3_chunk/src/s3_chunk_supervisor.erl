@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 28. May 2018 17:17
 %%%-------------------------------------------------------------------
--module(storage_supervisor).
+-module(s3_chunk_supervisor).
 -author("grzegorz").
 
 -behavior(supervisor).
@@ -26,7 +26,7 @@ start_link() ->
 
 init([]) ->
 
-  s3_mnesia_logic:init(),
+  s3_chunk_logic:init(),
 
   io:format("~p (~p) starting ... ~n", [{global, ?MODULE}, self()]),
 

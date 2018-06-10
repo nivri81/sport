@@ -1,0 +1,16 @@
+{application, s3,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, [s3_supervisor]},
+  {mod, { s3, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy
+   ]},
+  {env,[ ]},
+  {modules, [s3_client, s3_cowboy_handler, s3_mnesia_logic, s3_supervisor]},
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.

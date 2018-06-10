@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 29. May 2018 21:43
 %%%-------------------------------------------------------------------
--module(s3).
+-module(s3_client).
 -author("grzegorz").
 
 %% API
@@ -23,15 +23,15 @@ write(FileName, Data) ->
   Chunks = split(Data),
   ListOfChunksWithNodes = assign_chunks_to_nodes( FileName, Chunks, ?CHUNK_NODE_LISTS),
   ok = store_chunks_on_nodes(ListOfChunksWithNodes),
-  false = server_mnesia_logic:file_exists(FileName),
+  false = s3_mnesia_logic:file_exists(FileName),
 
-  ok = server_mnesia_logic:store_file_metadata(FileName, ListOfChunksWithNodes),
+  ok = s3_mnesia_logic:store_file_metadata(FileName, ListOfChunksWithNodes),
   ok.
 
 read(FileName) ->
-  true = server_mnesia_logic:file_exists(FileName),
+  true = s3_mnesia_logic:file_exists(FileName),
 
-  KeyNodeList = server_mnesia_logic:read_key_node_list(FileName),
+  KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
   KeyDataList = [ {Key, read_chunk_on_node(Key, Node)} || {Key, Node} <- KeyNodeList],
   DataList = [ Data || {_Key, Data} <- KeyDataList],
   FileContent = list_to_binary(DataList),
@@ -40,11 +40,11 @@ read(FileName) ->
 
 delete(FileName) ->
 
-  true = server_mnesia_logic:file_exists(FileName),
+  true = s3_mnesia_logic:file_exists(FileName),
 
-  KeyNodeList = server_mnesia_logic:read_key_node_list(FileName),
+  KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
   [ok = delete_chunk_on_node(Key, Node) || {Key, Node} <- KeyNodeList],
-  ok = server_mnesia_logic:delete_metadata(FileName),
+  ok = s3_mnesia_logic:delete_metadata(FileName),
   ok.
 
 %%====================================================================

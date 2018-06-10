@@ -1,0 +1,16 @@
+{application, s3_chunk,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, [s3_chunk_server, s3_chunk_supervisor]},
+  {mod, { s3_chunk, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy
+   ]},
+  {env,[ ]},
+  {modules, [s3_chunk, s3_chunk_client, s3_chunk_logic, s3_chunk_server, s3_chunk_supervisor]},
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.

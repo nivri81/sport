@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(storage_system).
+-module(s3).
 
 -behaviour(application).
 
@@ -19,7 +19,7 @@ start() ->
 
 start(_StartType, _StartArgs) ->
     ok = setup_cowboy(),
-    storage_supervisor:start_link().
+    s3_supervisor:start_link().
 
 %%--------------------------------------------------------------------
 
