@@ -15,16 +15,6 @@
 %%====================================================================
 
 start() ->
-
-%%application:start(crypto),
-%%application:start(asn1),
-%%application:start(public_key),
-%%application:start(ssl),
-%%application:start(ranch),
-%%application:start(cowlib),
-%%application:start(cowboy),
-
-%%    ok = setup_cowboy(),
     application:start(?MODULE).
 
 start(_StartType, _StartArgs) ->
@@ -47,7 +37,7 @@ stop(_State) ->
 setup_cowboy() ->
 
     Dispatch = cowboy_router:compile([
-        {'_', [{"/", hello_handler, []}]}
+        {'_', [{"/", s3_cowboy_handler, []}]}
     ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
         [{port, 8080}],

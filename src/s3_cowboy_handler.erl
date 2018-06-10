@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. May 2018 21:39
 %%%-------------------------------------------------------------------
--module(hello_handler).
+-module(s3_cowboy_handler).
 -author("grzegorz").
 
 %% API
