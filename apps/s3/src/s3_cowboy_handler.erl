@@ -12,11 +12,35 @@
 %% API
 -export([init/2]).
 
+-export([allowed_methods/2, content_types_provided/2]).
 
-init(Req0, State) ->
-  io:format("~n ----------- sfsdf -------------------- ~n"),
-  Req = cowboy_req:reply(200,
-    #{<<"content-type">> => <<"text/plain">>},
-    <<"Hello Erlang aasdada -- rrrrrrrrrr  sada------- !">>,
-    Req0),
-  {ok, Req, State}.
+-export([handle/2]).
+
+
+%%-record(state, {operation, response}).
+
+init(Req, Opts) ->
+  io:format(user, "init ~p ", [ z ]),
+%%  [{op, Operation} | _] = Opts,
+%%  State = #state{operation = Operation, response=none},
+  {cowboy_rest, Req, Opts}.
+
+
+allowed_methods(Req, State) ->
+  {[<<"GET">>, <<"DELETE">>, <<"PUT">>], Req, State}.
+
+content_types_provided(Req, State) ->
+  io:format(user, "content type accepted ~p ", [ z ]),
+  {[
+    {{<<"application">>, <<"json">>, []}, handle}
+  ], Req, State}.
+
+
+
+handle(Req, State) ->
+
+  Method = cowboy_req:method(Req),
+
+%%  FileName = cowboy_req:binding(file_name, Req),
+  io:format(user, "Method ~p ", [Method ]),
+  {"Some Dody", Req, State}.

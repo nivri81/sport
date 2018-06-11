@@ -37,9 +37,11 @@ stop(_State) ->
 setup_cowboy() ->
 
     Dispatch = cowboy_router:compile([
-        {'_', [{"/", s3_cowboy_handler, []}]}
+        {'_', [
+            {"/file", s3_cowboy_handler, []}
+        ]}
     ]),
-    {ok, _} = cowboy:start_clear(my_http_listener,
+    {ok, _} = cowboy:start_clear(http,
         [{port, 8080}],
         #{env => #{dispatch => Dispatch}}
     ),
