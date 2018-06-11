@@ -16,17 +16,11 @@
 
 -export([read_file/2, write_file/2]).
 
-
-
-init(Req, Opts) ->
-  io:format(user, "init ~p ", [ z ]),
-  {cowboy_rest, Req, Opts}.
-
+init(Req, State) ->
+  {cowboy_rest, Req, State}.
 
 allowed_methods(Req, State) ->
   {[<<"GET">>, <<"DELETE">>, <<"PUT">>], Req, State}.
-
-
 
 %% -------------------------------------------------------------------
 %% @doc Handler for get method
@@ -39,15 +33,11 @@ content_types_provided(Req, State) ->
 
 
 read_file(Req, State) ->
-
-  Method = cowboy_req:method(Req),
-
-%%  FileName = cowboy_req:binding(file_name, Req),
-  io:format(user, "Method ~p ", [Method ]),
-
-  Body = <<"{\"rest\": \"Hello World from get!\"}">>,
+  QueryString = cowboy_req:parse_qs(Req),
+  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, QueryString),
+  FileData = s3_client:read(FileName),
+  Body = jiffy:encode({[ {<<"filename">>, FileName}, {<<"data">>, FileData} ]}),
   { Body , Req, State}.
-
 
 %% -------------------------------------------------------------------
 %% @doc Handler for put method
@@ -60,20 +50,29 @@ content_types_accepted(Req, State) ->
 
 write_file(Req, State) ->
 
-  Method = cowboy_req:method(Req),
+  {ok, Body, Req1} = cowboy_req:read_body(Req),
+  {DecodedBody} = jiffy:decode(Body),
+  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
+  {<<"data">>, Data} = lists:keyfind(<<"data">>, 1, DecodedBody),
 
-  io:format(user, "Method ~p ", [Method ]),
-  Body = <<"{\"rest\": \"Hello World from put!\"}">>,
-  Req1 = cowboy_req:set_resp_body(Body, Req),
-  { true, Req1, State}.
+  ok = s3_client:write(FileName, Data),
+  Response = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been stored">>}]}),
+
+  Req2 = cowboy_req:set_resp_body(Response, Req1),
+  { true, Req2, State}.
 
 %% -------------------------------------------------------------------
 %% @doc Handler for delete method
 %% -------------------------------------------------------------------
 delete_resource(Req, State) ->
-  
 
-  Body = <<"{\"rest\": \"Hello World from delete!\"}">>,
-  Req1 = cowboy_req:set_resp_body(Body, Req),
+  {ok, Body, Req1} = cowboy_req:read_body(Req),
+  {DecodedBody} = jiffy:decode(Body),
+  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
 
-  {true, Req1, State}.
+  ok = s3_client:delete(FileName),
+
+  Response = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been deleted">>}]}),
+  Req2 = cowboy_req:set_resp_body(Response, Req1),
+
+  {true, Req2, State}.

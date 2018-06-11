@@ -33,8 +33,8 @@ init([]) ->
   %%  one_for_one, one_for_all
 
   RestartStrategy = one_for_all,
-  MaxRestarts = 3,
-  MaxSecondsBetweenRestarts = 5,
+  MaxRestarts = 50,
+  MaxSecondsBetweenRestarts = 1,
   Flags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
   %%  permanent - always restart

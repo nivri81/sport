@@ -21,18 +21,18 @@
 %% -------------------------------------------------------------------
 -spec write(binary(), binary()) -> binary().
 write(Key, Data) ->
-  {atomic, ok}   = storage_chunk_server:write(Key, Data),
+  {atomic, ok}   = s3_chunk_server:write(Key, Data),
   ok.
 %% -------------------------------------------------------------------
 %% @doc read chunk
 %% -------------------------------------------------------------------
 -spec read(binary()) -> binary().
 read(Key) ->
-  storage_chunk_server:read(Key).
+  s3_chunk_server:read(Key).
 
 %% -------------------------------------------------------------------
 %% @doc delete chunk
 %% -------------------------------------------------------------------
 -spec delete(binary()) -> ok.
 delete(Key) ->
-  storage_chunk_server:delete(Key).
+  s3_chunk_server:delete(Key).

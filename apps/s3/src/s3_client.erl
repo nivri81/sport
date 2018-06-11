@@ -12,8 +12,8 @@
 %% API
 -export([write/2, read/1, delete/1]).
 
--define(CHUNK_SIZE, application:get_env(storage_system, chunk_size, 2)).
--define(CHUNK_NODE_LISTS, application:get_env(storage_system, chunk_nodes, [])).
+-define(CHUNK_SIZE, application:get_env(s3, chunk_size, 2)).
+-define(CHUNK_NODE_LISTS, application:get_env(s3, chunk_nodes, [])).
 
 %%====================================================================
 %% API
@@ -112,7 +112,7 @@ store_chunks_on_nodes(ListOfChunksWithNodes) ->
 %% -------------------------------------------------------------------
 -spec store_chunk_on_node( {binary(), atom(), binary()}) -> ok.
 store_chunk_on_node({ Key, Node, Data}) ->
-  ok = rpc:call( Node, storage_chunk_client, write, [Key, Data]),
+  ok = rpc:call( Node, s3_chunk_client, write, [Key, Data]),
   ok.
 
 %% -------------------------------------------------------------------
@@ -120,7 +120,7 @@ store_chunk_on_node({ Key, Node, Data}) ->
 %% -------------------------------------------------------------------
 -spec read_chunk_on_node( binary(), atom()) -> binary().
 read_chunk_on_node( Key, Node ) ->
-  ChunkData = rpc:call( Node, storage_chunk_client, read, [Key]),
+  ChunkData = rpc:call( Node, s3_chunk_client, read, [Key]),
   ChunkData.
 
 %% -------------------------------------------------------------------
@@ -128,5 +128,5 @@ read_chunk_on_node( Key, Node ) ->
 %% -------------------------------------------------------------------
 -spec delete_chunk_on_node( binary(), atom()) -> ok.
 delete_chunk_on_node(Key, Node) ->
-  ok = rpc:call( Node, storage_chunk_client, delete, [Key]),
+  ok = rpc:call( Node, s3_chunk_client, delete, [Key]),
   ok.
