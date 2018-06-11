@@ -36,12 +36,24 @@ start_link() ->
 stop() ->
   gen_server:cast({global, ?MODULE}, stop).
 
+%% -------------------------------------------------------------------
+%% @doc write chunk
+%% -------------------------------------------------------------------
+-spec write(Key :: binary(), Data :: binary()) -> ok.
 write(Key, Data) ->
   gen_server:call( {global, ?MODULE}, {write, Key, Data}).
 
+%% -------------------------------------------------------------------
+%% @doc read chunk
+%% -------------------------------------------------------------------
+-spec read(Key :: binary()) -> binary().
 read(Key) ->
   gen_server:call( {global, ?MODULE}, {read, Key}).
 
+%% -------------------------------------------------------------------
+%% @doc delete chunk
+%% -------------------------------------------------------------------
+-spec delete(Key :: binary()) -> ok.
 delete(Key) ->
   gen_server:call( {global, ?MODULE}, {delete, Key}).
 

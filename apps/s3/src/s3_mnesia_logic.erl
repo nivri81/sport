@@ -35,7 +35,7 @@ init() ->
 %% -------------------------------------------------------------------
 %% @doc check whether file already exists
 %% -------------------------------------------------------------------
--spec file_exists(binary()) -> boolean().
+-spec file_exists( FileName :: binary()) -> boolean().
 file_exists(FileName) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_metadata), X#file_metadata.file_name =:= FileName]),
@@ -51,7 +51,7 @@ file_exists(FileName) ->
 %% -------------------------------------------------------------------
 %% @doc read metadata
 %% -------------------------------------------------------------------
--spec read_key_node_list(binary()) -> list().
+-spec read_key_node_list(FileName :: binary()) -> list().
 read_key_node_list(FileName) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_metadata), X#file_metadata.file_name =:= FileName]),
@@ -65,7 +65,7 @@ read_key_node_list(FileName) ->
 %% -------------------------------------------------------------------
 %% @doc store file metadata in mnesia
 %% -------------------------------------------------------------------
--spec store_file_metadata(binary(), list()) -> ok.
+-spec store_file_metadata(FileName :: binary(), ListOfChunksWithNodes :: list()) -> ok.
 store_file_metadata(FileName, ListOfChunksWithNodes) ->
   KeyNodeList = [ {ChunkKey, CurrentNode} || { ChunkKey, CurrentNode, _ChunkData} <- ListOfChunksWithNodes ],
   AF = fun () ->
@@ -75,9 +75,9 @@ store_file_metadata(FileName, ListOfChunksWithNodes) ->
   ok.
 
 %% -------------------------------------------------------------------
-%% @doc obliterate file metadata in mnesia
+%% @doc obliterate metadata for file in mnesia
 %% -------------------------------------------------------------------
--spec delete_metadata(binary()) -> ok.
+-spec delete_metadata( FileName :: binary()) -> ok.
 delete_metadata(FileName) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_metadata), X#file_metadata.file_name =:= FileName]),

@@ -19,6 +19,10 @@
 %% API
 %%====================================================================
 
+%% -------------------------------------------------------------------
+%% @doc Store file
+%% -------------------------------------------------------------------
+-spec write(FileName :: binary(), Data :: any()) -> ok.
 write(FileName, Data) ->
   Chunks = split(Data),
   ListOfChunksWithNodes = assign_chunks_to_nodes( FileName, Chunks, ?CHUNK_NODE_LISTS),
@@ -28,20 +32,24 @@ write(FileName, Data) ->
   ok = s3_mnesia_logic:store_file_metadata(FileName, ListOfChunksWithNodes),
   ok.
 
+%% -------------------------------------------------------------------
+%% @doc Read file
+%% -------------------------------------------------------------------
+-spec read(FileName :: binary()) -> binary().
 read(FileName) ->
   true = s3_mnesia_logic:file_exists(FileName),
-
   KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
   KeyDataList = [ {Key, read_chunk_on_node(Key, Node)} || {Key, Node} <- KeyNodeList],
   DataList = [ Data || {_Key, Data} <- KeyDataList],
   FileContent = list_to_binary(DataList),
-  io:format("Read data ~p ~n", [ FileContent]),
   FileContent.
 
+%% -------------------------------------------------------------------
+%% @doc Delete file
+%% -------------------------------------------------------------------
+-spec delete(FileName :: binary()) -> ok.
 delete(FileName) ->
-
   true = s3_mnesia_logic:file_exists(FileName),
-
   KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
   [ok = delete_chunk_on_node(Key, Node) || {Key, Node} <- KeyNodeList],
   ok = s3_mnesia_logic:delete_metadata(FileName),

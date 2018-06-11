@@ -16,6 +16,10 @@
 
 -record(file_chunk, {key, data, createdOn}).
 
+%% -------------------------------------------------------------------
+%% @doc init chunk
+%% -------------------------------------------------------------------
+-spec init() -> ok.
 init() ->
   mnesia:create_schema([node()]),
   mnesia:start(),
@@ -27,25 +31,39 @@ init() ->
         {type,  bag},
         {disc_copies, [node()]}
         ])
-  end.
+  end,
 
+  ok.
 
+%% -------------------------------------------------------------------
+%% @doc write chunk
+%% -------------------------------------------------------------------
+-spec write(Key :: binary(), Data :: binary()) -> ok.
 write(Key, Data) ->
   AF = fun () ->
     {CreatedOn, _} = calendar:universal_time(),
     mnesia:write(#file_chunk{ key = Key, data = Data, createdOn = CreatedOn })
     end,
-  mnesia:transaction(AF).
+  {atomic, ok} = mnesia:transaction(AF),
+  ok.
 
+%% -------------------------------------------------------------------
+%% @doc read chunk
+%% -------------------------------------------------------------------
+-spec read(Key :: binary()) -> binary().
 read(Key) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_chunk.key =:= Key]),
     [Result] = qlc:e(Query),
     Result#file_chunk.data
   end,
-  {atomic, Comments} = mnesia:transaction(AF),
-  Comments.
+  {atomic, FileContent} = mnesia:transaction(AF),
+  FileContent.
 
+%% -------------------------------------------------------------------
+%% @doc delete chunk
+%% -------------------------------------------------------------------
+-spec delete(Key :: binary()) -> ok.
 delete(Key) ->
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_chunk.key =:= Key]),
