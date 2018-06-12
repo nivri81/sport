@@ -26,7 +26,6 @@ allowed_methods(Req, State) ->
 %% @doc Handler for get method
 %% -------------------------------------------------------------------
 content_types_provided(Req, State) ->
-  io:format(user, "content type accepted ~p ", [ z ]),
   {[
     {{<<"application">>, <<"json">>, []}, read_file}
   ], Req, State}.
@@ -51,7 +50,6 @@ read_file(Req, State) ->
 %% @doc Handler for put method
 %% -------------------------------------------------------------------
 content_types_accepted(Req, State) ->
-  io:format(user, "content type accepted ~p ", [ z ]),
   {[
     {{<<"application">>, <<"json">>, []}, write_file}
   ], Req, State}.

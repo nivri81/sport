@@ -24,7 +24,8 @@ init() ->
   mnesia:create_schema([node()]),
   mnesia:start(),
   try
-      mnesia:table_info(type, file_chunk)
+      mnesia:table_info(type, file_chunk),
+      mnesia:clear_table(file_chunk)
   catch
       exit: _ ->
         mnesia:create_table(file_chunk, [{attributes, record_info(fields, file_chunk)},

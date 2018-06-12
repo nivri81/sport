@@ -23,7 +23,8 @@ init() ->
   mnesia:create_schema([node()]),
   mnesia:start(),
   try
-    mnesia:table_info(type, file_metadata)
+    mnesia:table_info(type, file_metadata),
+    mnesia:clear_table(file_metadata)
   catch
     exit: _ ->
       mnesia:create_table(file_metadata, [{attributes, record_info(fields, file_metadata)},
@@ -31,6 +32,7 @@ init() ->
         {disc_copies, [node()]}
       ])
   end.
+
 
 %% -------------------------------------------------------------------
 %% @doc check whether file already exists

@@ -6,7 +6,8 @@
   {applications,
    [kernel,
     stdlib,
-    cowboy
+    cowboy,
+    eunit
    ]},
   {env,[ ]},
   {modules, [s3_client, s3_cowboy_handler, s3_mnesia_logic, s3_supervisor]},

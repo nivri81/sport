@@ -25,9 +25,7 @@ start_link() ->
   supervisor:start_link({global, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-
   s3_mnesia_logic:init(),
-
   io:format("~p (~p) starting ... ~n", [{global, ?MODULE}, self()]),
 
   %%  one_for_one, one_for_all
