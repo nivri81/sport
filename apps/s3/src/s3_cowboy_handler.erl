@@ -31,13 +31,21 @@ content_types_provided(Req, State) ->
     {{<<"application">>, <<"json">>, []}, read_file}
   ], Req, State}.
 
-
 read_file(Req, State) ->
   QueryString = cowboy_req:parse_qs(Req),
   {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, QueryString),
-  FileData = s3_client:read(FileName),
-  Body = jiffy:encode({[ {<<"filename">>, FileName}, {<<"data">>, FileData} ]}),
-  { Body , Req, State}.
+
+  try
+    FileData = s3_client:read(FileName),
+    Body = jiffy:encode({[ {<<"filename">>, FileName}, {<<"data">>, FileData} ]}),
+    { Body , Req, State}
+  catch
+    _: _ ->
+      ErrorResponse = jiffy:encode({[{ failure, <<"Error occurred while reading file: '", FileName/binary,"'">>}]}),
+      ReqError = cowboy_req:set_resp_body(ErrorResponse, Req),
+      {ok, ReqError1} = cowboy_req:reply(400, ReqError),
+      {halt, ReqError1, State}
+  end.
 
 %% -------------------------------------------------------------------
 %% @doc Handler for put method
@@ -55,11 +63,18 @@ write_file(Req, State) ->
   {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
   {<<"data">>, Data} = lists:keyfind(<<"data">>, 1, DecodedBody),
 
-  ok = s3_client:write(FileName, Data),
-  Response = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been stored">>}]}),
+  try
+    ok = s3_client:write(FileName, Data),
+    SuccessResponse = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been stored">>}]}),
+    Req2 = cowboy_req:set_resp_body(SuccessResponse, Req1),
+    { true, Req2, State}
+  catch
+    _: _ ->
+      ErrorResponse = jiffy:encode({[{ failure, <<"Error occurred while storing file: '", FileName/binary,"'">>}]}),
+      ReqError = cowboy_req:set_resp_body(ErrorResponse, Req1),
+      {false, ReqError, State}
+  end.
 
-  Req2 = cowboy_req:set_resp_body(Response, Req1),
-  { true, Req2, State}.
 
 %% -------------------------------------------------------------------
 %% @doc Handler for delete method
@@ -70,9 +85,14 @@ delete_resource(Req, State) ->
   {DecodedBody} = jiffy:decode(Body),
   {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
 
-  ok = s3_client:delete(FileName),
-
-  Response = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been deleted">>}]}),
-  Req2 = cowboy_req:set_resp_body(Response, Req1),
-
-  {true, Req2, State}.
+  try
+    ok = s3_client:delete(FileName),
+    Response = jiffy:encode({[{success, <<"File: '", FileName/binary,"' has been deleted">>}]}),
+    Req2 = cowboy_req:set_resp_body(Response, Req1),
+    {true, Req2, State}
+  catch
+    _: _ ->
+      ErrorResponse = jiffy:encode({[{ failure, <<"Error occurred while removing file: '", FileName/binary,"'">>}]}),
+      ReqError = cowboy_req:set_resp_body(ErrorResponse, Req1),
+      {false, ReqError, State}
+  end.
