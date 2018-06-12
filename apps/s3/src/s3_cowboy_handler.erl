@@ -43,7 +43,7 @@ read_file(Req, State) ->
     _: _ ->
       ErrorResponse = jiffy:encode({[{ failure, <<"Error occurred while reading file: '", FileName/binary,"'">>}]}),
       ReqError = cowboy_req:set_resp_body(ErrorResponse, Req),
-      {ok, ReqError1} = cowboy_req:reply(400, ReqError),
+       ReqError1 = cowboy_req:reply(400, ReqError),
       {halt, ReqError1, State}
   end.
 
