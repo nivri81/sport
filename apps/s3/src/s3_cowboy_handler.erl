@@ -33,7 +33,7 @@ content_types_provided(Req, State) ->
 
 read_file(Req, State) ->
   QueryString = cowboy_req:parse_qs(Req),
-  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, QueryString),
+  FileName = proplists:get_value(<<"filename">>, QueryString),
 
   try
     FileData = s3_client:read(FileName),
@@ -60,8 +60,9 @@ write_file(Req, State) ->
 
   {ok, Body, Req1} = cowboy_req:read_body(Req),
   {DecodedBody} = jiffy:decode(Body),
-  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
-  {<<"data">>, Data} = lists:keyfind(<<"data">>, 1, DecodedBody),
+
+  FileName = proplists:get_value(<<"filename">>, DecodedBody),
+  Data = proplists:get_value(<<"data">>, DecodedBody),
 
   try
     ok = s3_client:write(FileName, Data),
@@ -75,7 +76,6 @@ write_file(Req, State) ->
       {false, ReqError, State}
   end.
 
-
 %% -------------------------------------------------------------------
 %% @doc Handler for delete method
 %% -------------------------------------------------------------------
@@ -83,7 +83,8 @@ delete_resource(Req, State) ->
 
   {ok, Body, Req1} = cowboy_req:read_body(Req),
   {DecodedBody} = jiffy:decode(Body),
-  {<<"filename">>, FileName} = lists:keyfind(<<"filename">>, 1, DecodedBody),
+
+  FileName = proplists:get_value(<<"filename">>, DecodedBody),
 
   try
     ok = s3_client:delete(FileName),
