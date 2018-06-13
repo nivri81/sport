@@ -24,11 +24,6 @@ start_link_shell() ->
 start_link() ->
   supervisor:start_link({global, get_name()}, ?MODULE, []).
 
-
-get_name() ->
-  NodeName = atom_to_binary(node(), utf8),
-  binary_to_atom(<<"supervisor_", NodeName/binary>>, utf8).
-
 init([]) ->
 
   s3_chunk_logic:init(),
@@ -61,3 +56,7 @@ init([]) ->
   %%  tuple of restart strategy, max restarts and max time
   %%  child specification
   {ok, {Flags, [StorageSpecifications]}}.
+
+get_name() ->
+  NodeName = atom_to_binary(node(), utf8),
+  binary_to_atom(<<"supervisor_", NodeName/binary>>, utf8).

@@ -1,5 +1,5 @@
 {application, s3,
- [{description, "An OTP application"},
+ [{description, "Simple S3 Implementation"},
   {vsn, "0.1.0"},
   {registered, [s3_supervisor]},
   {mod, { s3, []}},

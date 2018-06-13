@@ -1,5 +1,5 @@
 %%%-------------------------------------------------------------------
-%%% @author merk
+%%% @author grzegorz
 %%% @copyright (C) 2018, The Company Ltd
 %%% @doc
 %%%
@@ -7,7 +7,7 @@
 %%% Created : 28. May 2018 16:13
 %%%-------------------------------------------------------------------
 -module(s3_chunk_client).
--author("merk").
+-author("grzegorz").
 
 %% API
 -export([write/2, read/1, delete/1]).

@@ -37,12 +37,14 @@ write(FileName, Data) ->
 %% -------------------------------------------------------------------
 -spec read(FileName :: binary()) -> binary().
 read(FileName) ->
+
   true = s3_mnesia_logic:file_exists(FileName),
+
   KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
-  KeyDataList = [ {Key, read_chunk_on_node(Key, Node)} || {Key, Node} <- KeyNodeList],
 
-
-  io:format("Co to ~p ~n", [KeyDataList]),
+  io:format("Start read ~p ~n", [FileName]),
+  KeyPidList = [ {Key, read_chunk_on_node(Key, Node)} || {Key, Node} <- KeyNodeList],
+  KeyDataList = read_data_async(KeyPidList, []),
 
   DataList = [ Data || {_Key, Data} <- KeyDataList],
   FileContent = list_to_binary(DataList),
@@ -133,12 +135,9 @@ store_chunk_on_node({ Key, Node, Data}) ->
 %% -------------------------------------------------------------------
 -spec read_chunk_on_node( binary(), atom()) -> binary().
 read_chunk_on_node( Key, Node ) ->
-
-
-
-  ChunkData = rpc:call( Node, s3_chunk_client, read, [Key]),
-  io:format("Data has been read: node: ~p, key: ~p, data: ~p  ~n", [Node, Key, ChunkData]),
-  ChunkData.
+  Pid = rpc:async_call( Node, s3_chunk_client, read, [Key]),
+  io:format("Data has been read: node: ~p, key: ~p, pid: ~p  ~n", [Node, Key, Pid]),
+  Pid.
 
 %% -------------------------------------------------------------------
 %% @doc remove chunk from node
@@ -148,3 +147,15 @@ delete_chunk_on_node(Key, Node) ->
   ok = rpc:call( Node, s3_chunk_client, delete, [Key]),
   io:format("File has been deleted, node: ~p, key: ~p ~n", [Node, Key]),
   ok.
+
+%% -------------------------------------------------------------------
+%% @doc Read data from async call
+%% -------------------------------------------------------------------
+-spec read_data_async( [{binary(), pid()}], [{binary(), binary()}]) -> [{binary(), binary()}].
+read_data_async([], Acc) ->
+  Acc;
+
+read_data_async([{Key, Pid}| KeyPidList], Acc) ->
+  io:format("~n ---------------- ~n Read data async!!!!"),
+  {value, Value} =  rpc:nb_yield(Pid, 2* 3600),
+  read_data_async(KeyPidList, Acc ++ [{Key, Value}]).

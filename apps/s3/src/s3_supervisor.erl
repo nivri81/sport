@@ -16,7 +16,6 @@
 
 -export([init/1]).
 
-
 start_link_shell() ->
   {ok, Pid} = supervisor:start_link({global, ?MODULE}, ?MODULE, []),
   unlink(Pid).

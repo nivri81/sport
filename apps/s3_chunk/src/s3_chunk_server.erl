@@ -36,10 +36,6 @@ start_link() ->
 stop() ->
   gen_server:cast({global, get_name()}, stop).
 
-get_name() ->
-  NodeName = atom_to_binary(node(), utf8),
-  binary_to_atom(<<"gen_server_", NodeName/binary>>, utf8).
-
 %% -------------------------------------------------------------------
 %% @doc write chunk
 %% -------------------------------------------------------------------
@@ -98,3 +94,7 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVersion, State, _Extra) ->
   {ok, State}.
+
+get_name() ->
+  NodeName = atom_to_binary(node(), utf8),
+  binary_to_atom(<<"gen_server_", NodeName/binary>>, utf8).
