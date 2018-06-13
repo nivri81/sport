@@ -35,7 +35,7 @@ stop(_State) ->
 %%====================================================================
 
 setup_cowboy() ->
-
+io:format(user, "User start ~p", [z]),
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/file", s3_cowboy_handler, []}

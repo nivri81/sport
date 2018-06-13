@@ -48,8 +48,8 @@ init([]) ->
   %%  supervisor
   Type = worker,
 
-%%  StorageSpecifications = {storageChunkServerId, {s3_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
+  StorageSpecifications = {storageChunkServerId, {s3_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
 
   %%  tuple of restart strategy, max restarts and max time
   %%  child specification
-  {ok, {Flags, []}}.
+  {ok, {Flags, [StorageSpecifications ]}}.

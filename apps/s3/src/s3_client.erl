@@ -40,6 +40,10 @@ read(FileName) ->
   true = s3_mnesia_logic:file_exists(FileName),
   KeyNodeList = s3_mnesia_logic:read_key_node_list(FileName),
   KeyDataList = [ {Key, read_chunk_on_node(Key, Node)} || {Key, Node} <- KeyNodeList],
+
+
+  io:format("Co to ~p ~n", [KeyDataList]),
+
   DataList = [ Data || {_Key, Data} <- KeyDataList],
   FileContent = list_to_binary(DataList),
   FileContent.
@@ -129,6 +133,7 @@ store_chunk_on_node({ Key, Node, Data}) ->
 -spec read_chunk_on_node( binary(), atom()) -> binary().
 read_chunk_on_node( Key, Node ) ->
   ChunkData = rpc:call( Node, s3_chunk_client, read, [Key]),
+  io:format("Data has been read, key: ~p  data: ~p ~n", [Key, ChunkData]),
   ChunkData.
 
 %% -------------------------------------------------------------------

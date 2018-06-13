@@ -18,17 +18,22 @@
 
 
 start_link_shell() ->
-  {ok, Pid} = supervisor:start_link({global, ?MODULE}, ?MODULE, []),
+  {ok, Pid} = supervisor:start_link({global, get_name()}, ?MODULE, []),
   unlink(Pid).
 
 start_link() ->
-  supervisor:start_link({global, ?MODULE}, ?MODULE, []).
+  supervisor:start_link({global, get_name()}, ?MODULE, []).
+
+
+get_name() ->
+  NodeName = atom_to_binary(node(), utf8),
+  binary_to_atom(<<"supervisor_", NodeName/binary>>, utf8).
 
 init([]) ->
 
   s3_chunk_logic:init(),
 
-  io:format("~p (~p) starting ... ~n", [{global, ?MODULE}, self()]),
+  io:format("~p (~p) starting ... ~n", [{global, get_name()}, self()]),
 
   %%  one_for_one, one_for_all
 
@@ -50,7 +55,8 @@ init([]) ->
   %%  supervisor
   Type = worker,
 
-  StorageSpecifications = {storageChunkServerId, {s3_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
+  NodeName = atom_to_binary(node(), utf8),
+  StorageSpecifications = { binary_to_atom(<<"server_", NodeName/binary>>, utf8), {s3_chunk_server, start_link, []}, Restart, Shutdown, Type, [storage_chunk_server]},
 
   %%  tuple of restart strategy, max restarts and max time
   %%  child specification

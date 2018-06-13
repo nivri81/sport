@@ -31,31 +31,35 @@
 %%%===================================================================
 
 start_link() ->
-  gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
+  gen_server:start_link({global, get_name()}, ?MODULE, [], []).
 
 stop() ->
-  gen_server:cast({global, ?MODULE}, stop).
+  gen_server:cast({global, get_name()}, stop).
+
+get_name() ->
+  NodeName = atom_to_binary(node(), utf8),
+  binary_to_atom(<<"gen_server_", NodeName/binary>>, utf8).
 
 %% -------------------------------------------------------------------
 %% @doc write chunk
 %% -------------------------------------------------------------------
 -spec write(Key :: binary(), Data :: binary()) -> ok.
 write(Key, Data) ->
-  gen_server:call( {global, ?MODULE}, {write, Key, Data}).
+  gen_server:call( {global, get_name()}, {write, Key, Data}).
 
 %% -------------------------------------------------------------------
 %% @doc read chunk
 %% -------------------------------------------------------------------
 -spec read(Key :: binary()) -> binary().
 read(Key) ->
-  gen_server:call( {global, ?MODULE}, {read, Key}).
+  gen_server:call( {global, get_name()}, {read, Key}).
 
 %% -------------------------------------------------------------------
 %% @doc delete chunk
 %% -------------------------------------------------------------------
 -spec delete(Key :: binary()) -> ok.
 delete(Key) ->
-  gen_server:call( {global, ?MODULE}, {delete, Key}).
+  gen_server:call( {global, get_name()}, {delete, Key}).
 
 %%%===================================================================
 %%% Call Back Functions
@@ -63,7 +67,7 @@ delete(Key) ->
 
 init([]) ->
   process_flag(trap_exit, true),
-  io:format("~p (~p) starting .... ~n", [{global, ?MODULE}, self()]),
+  io:format("~p (~p) starting .... ~n", [{global, get_name()}, self()]),
   s3_chunk_logic:init(),
   {ok, #state{}}.
 

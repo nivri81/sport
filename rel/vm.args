@@ -1,4 +1,4 @@
--name chunk_server_node1@192.168.1.104
+-name ${NODE_NAME}@192.168.1.104
 -setcookie cookie
 -heart
 -boot_var
