@@ -125,6 +125,7 @@ store_chunks_on_nodes(ListOfChunksWithNodes) ->
 -spec store_chunk_on_node( {binary(), atom(), binary()}) -> ok.
 store_chunk_on_node({ Key, Node, Data}) ->
   ok = rpc:call( Node, s3_chunk_client, write, [Key, Data]),
+  io:format("Data has been stored, node: ~p, key: ~p, data: ~p ~n", [Node, Key, Data]),
   ok.
 
 %% -------------------------------------------------------------------
@@ -132,8 +133,11 @@ store_chunk_on_node({ Key, Node, Data}) ->
 %% -------------------------------------------------------------------
 -spec read_chunk_on_node( binary(), atom()) -> binary().
 read_chunk_on_node( Key, Node ) ->
+
+
+
   ChunkData = rpc:call( Node, s3_chunk_client, read, [Key]),
-  io:format("Data has been read, key: ~p  data: ~p ~n", [Key, ChunkData]),
+  io:format("Data has been read: node: ~p, key: ~p, data: ~p  ~n", [Node, Key, ChunkData]),
   ChunkData.
 
 %% -------------------------------------------------------------------
@@ -142,4 +146,5 @@ read_chunk_on_node( Key, Node ) ->
 -spec delete_chunk_on_node( binary(), atom()) -> ok.
 delete_chunk_on_node(Key, Node) ->
   ok = rpc:call( Node, s3_chunk_client, delete, [Key]),
+  io:format("File has been deleted, node: ~p, key: ~p ~n", [Node, Key]),
   ok.

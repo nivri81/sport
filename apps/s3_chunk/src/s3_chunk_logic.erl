@@ -41,7 +41,7 @@ init() ->
 %% -------------------------------------------------------------------
 -spec write(Key :: binary(), Data :: binary()) -> ok.
 write(Key, Data) ->
-  io:format("Write key ~p", [Key]),
+  io:format("Chunk write key ~p ~n", [Key]),
   AF = fun () ->
     {CreatedOn, _} = calendar:universal_time(),
     mnesia:write(#file_chunk{ key = Key, data = Data, createdOn = CreatedOn })
@@ -54,7 +54,7 @@ write(Key, Data) ->
 %% -------------------------------------------------------------------
 -spec read(Key :: binary()) -> binary().
 read(Key) ->
-  io:format("Read key ~p", [Key]),
+  io:format("Chunk read key ~p ~n", [Key]),
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_chunk.key =:= Key]),
     [Result] = qlc:e(Query),
@@ -68,7 +68,7 @@ read(Key) ->
 %% -------------------------------------------------------------------
 -spec delete(Key :: binary()) -> ok.
 delete(Key) ->
-  io:format("Delete key ~p", [Key]),
+  io:format("Chunk delete key: ~p ~n", [Key]),
   AF = fun() ->
     Query = qlc:q([X || X <- mnesia:table(file_chunk), X#file_chunk.key =:= Key]),
     Results = qlc:e(Query),
